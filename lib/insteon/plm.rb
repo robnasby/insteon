@@ -18,6 +18,30 @@ module Insteon
 
     end
 
+
+	private
+
+    def send_command_to_device(command, address)
+
+    	message = "0262#{address}01#{command}"
+
+      @serial_port.write encode_message(message)
+      decode_response @serial_port.read
+
+    end
+
+    def decode_response(response)
+
+    	response.unpack('H*')
+
+		end
+
+    def encode_message(message)
+
+      message.chars.each_slice(2).map {|i| i.join.to_i(16) }.pack('c*')
+
+    end
+
   end
 
 end
